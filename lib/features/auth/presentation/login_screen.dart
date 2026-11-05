@@ -5,6 +5,7 @@ import '../../../core/constants/app_assets.dart';
 import '../../../core/constants/app_strings.dart';
 import '../../../core/routes/app_routes.dart';
 import '../../../core/theme/app_colors.dart';
+import '../data/auth_service.dart';
 import 'widgets/student_quick_login.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -18,6 +19,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _parentIdController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final AuthService _authService = AuthService();
 
   bool _obscurePassword = true;
   bool _submitting = false;
@@ -34,17 +36,47 @@ class _LoginScreenState extends State<LoginScreen> {
     if (!_formKey.currentState!.validate()) return;
 
     setState(() => _submitting = true);
-    // Placeholder for the real authentication call.
-    await Future<void>.delayed(const Duration(milliseconds: 800));
+
+    final result = await _authService.login(
+      parentId: _parentIdController.text.trim(),
+      password: _passwordController.text,
+    );
+
     if (!mounted) return;
     setState(() => _submitting = false);
+
+    if (!result.success) {
+      _showMessage(result.message ?? 'Login failed. Please try again.');
+      return;
+    }
+
     Navigator.of(context).pushReplacementNamed(AppRoutes.home);
   }
 
-  void _onForgotPassword() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Password reset is not available yet.')),
+  Future<void> _onForgotPassword() async {
+    final email = _parentIdController.text.trim();
+    if (!email.contains('@')) {
+      _showMessage(
+        'Enter the e-mail address registered for your account, then tap '
+        'Forgot password.',
+      );
+      return;
+    }
+
+    setState(() => _submitting = true);
+    final result = await _authService.requestPasswordReset(email);
+    if (!mounted) return;
+    setState(() => _submitting = false);
+
+    _showMessage(
+      result.message ?? 'If the e-mail exists, a reset code has been sent.',
     );
+  }
+
+  void _showMessage(String message) {
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text(message)));
   }
 
   void _onStudentLogin(String label) {
