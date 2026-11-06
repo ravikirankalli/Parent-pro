@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../config/api_config.dart';
-import '../../features/auth/data/models/parent.dart';
+import '../../features/auth/data/models/child_slot.dart';
 
 /// HTTP client that attaches the stored access token to every request and
 /// transparently refreshes it once when the backend reports it has expired.

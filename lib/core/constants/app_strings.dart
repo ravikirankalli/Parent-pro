@@ -26,13 +26,14 @@ class AppStrings {
 
   // Login
   static const String login = 'Login';
-  static const String loginSubtitle = 'Access your ParentPro account';
-  static const String parentId = 'Parent ID';
+  static const String loginSubtitle =
+      "Sign in with your child's Student ID";
+  static const String parentId = 'Student ID';
   static const String password = 'Password';
   static const String forgotPassword = 'Forgot Password?';
   static const String logIn = 'Log in';
 
-  static const String parentIdRequired = 'Please enter your Parent ID';
+  static const String parentIdRequired = "Please enter the Student ID";
   static const String passwordRequired = 'Please enter your password';
   static const String passwordTooShort = 'Password must be at least 6 characters';
 

@@ -1,8 +1,10 @@
 /// Single place to configure where Parent Pro talks to the backend.
 ///
-/// The backend is the School Pro Laravel app. Login is role-gated: an account
-/// whose role is not `parent` is rejected with 403, which keeps students,
-/// teachers and staff out of this app.
+/// The backend is the School Pro Laravel app.
+///
+/// A parent has no login of their own: they sign in with one of their
+/// children's Student ID and password, so this app authenticates as role
+/// `student`. The admin panel decides which children a parent covers.
 class ApiConfig {
   ApiConfig._();
 
@@ -15,8 +17,8 @@ class ApiConfig {
     defaultValue: 'https://coral-cassowary-543563.hostingersite.com/api',
   );
 
-  /// Role this app authenticates as.
-  static const String role = 'parent';
+  /// Role this app authenticates as — a child's student account.
+  static const String role = 'student';
 
   static const Duration timeout = Duration(seconds: 20);
 
@@ -24,5 +26,5 @@ class ApiConfig {
   static const String refreshTokenPath = '/refresh-token';
   static const String logoutPath = '/logout';
   static const String forgotPasswordPath = '/forgot-password';
-  static const String profilePath = '/parent/profile';
+  static const String profilePath = '/student/profile';
 }
